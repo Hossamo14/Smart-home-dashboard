@@ -1,0 +1,353 @@
+<!-- index.html (header text bigger + dark digital-twin theme with transparent glass cards) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Home Dashboard (Digital Twin)</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <!-- Add class "alert-on" to enable flashing lamp -->
+  <!-- <body class="alert-on"> -->
+    <!-- Moving transparent clouds (put right after <body>) -->
+<div class="clouds" aria-hidden="true">
+  <span class="cloud c1"></span>
+  <span class="cloud c2"></span>
+  <span class="cloud c3"></span>
+  <span class="cloud c4"></span>
+</div>
+<!-- Rain overlay (hidden unless body has class "rain-on") -->
+<div class="rain" aria-hidden="true">
+  <span class="drop d1"></span><span class="drop d2"></span><span class="drop d3"></span><span class="drop d4"></span>
+  <span class="drop d5"></span><span class="drop d6"></span><span class="drop d7"></span><span class="drop d8"></span>
+  <span class="drop d9"></span><span class="drop d10"></span><span class="drop d11"></span><span class="drop d12"></span>
+  <span class="drop d13"></span><span class="drop d14"></span><span class="drop d15"></span><span class="drop d16"></span>
+  <span class="drop d17"></span><span class="drop d18"></span><span class="drop d19"></span><span class="drop d20"></span>
+</div>
+
+
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <div>
+        <h1>Smart Home</h1>
+        <p class="subtitle">Digital twin • One page • Glass UI</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="chip" id="timeChip">--:--</div>
+      <button class="btn btn-ghost" type="button">Night</button>
+      <button class="btn btn-ghost" type="button">Away</button>
+      <button class="btn btn-danger" type="button">All Off</button>
+    </div>
+  </header>
+
+  <main class="container onepage">
+    <!-- LEFT: Lights -->
+    <section class="col left">
+      <article class="card big">
+        <div class="card-head">
+          <h2>Lights</h2>
+          <span class="hint">5 zones</span>
+        </div>
+
+        <div class="lights-list">
+          <div class="light-row">
+            <div class="dotlabel">
+              <span class="pin" title="Living Room"></span>
+              <div>
+                <div class="title">Living Room</div>
+                <div class="sub">Main light</div>
+              </div>
+            </div>
+            <div class="right">
+              <label class="switch">
+                <input id="led" type="checkbox" />
+                <span class="slider"></span>
+              </label>
+              <input id="brightness" class="range mini" type="range" min="0" max="100" value="70" />
+            </div>
+          </div>
+
+          <div class="light-row">
+            <div class="dotlabel">
+              <span class="pin" title="Bedroom"></span>
+              <div>
+                <div class="title">Bedroom</div>
+                <div class="sub">Ceiling</div>
+              </div>
+            </div>
+            <div id="switchWrap" class="right">
+              <label class="switch">
+                <input id="ledSwitch" type="checkbox" />
+                <span class="slider"></span>
+              </label>
+              <input id="ct"class="range mini" type="range" min="0" max="100" value="0" />
+            </div>
+          </div>
+
+          <div class="light-row">
+            <div class="dotlabel">
+              <span class="pin" title="Courtyard"></span>
+              <div>
+                <div class="title">Courtyard</div>
+                <div class="sub">Outdoor</div>
+              </div>
+            </div>
+            <div class="right">
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+              
+            </div>
+          </div>
+
+          <div class="light-row">
+            <div class="dotlabel">
+              <span class="pin" title="Entrance"></span>
+              <div>
+                <div class="title">Entrance</div>
+                <div class="sub">Porch</div>
+              </div>
+            </div>
+            <div class="right">
+              <label class="switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+              </label>
+             
+            </div>
+          </div>
+
+          <div class="light-row">
+            <div class="dotlabel">
+              <span class="pin" title="Corridor"></span>
+              <div>
+                <div class="title">Corridor</div>
+                <div class="sub">Hall</div>
+              </div>
+            </div>
+            <div class="right">
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+              `
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- CENTER: Line chart (Temperature + Humidity) -->
+<section class="col center">
+  <article class="card chart">
+    <div class="card-head">
+      <h2>Environment Trend</h2>
+      <span class="hint">Temp + Humidity</span>
+    </div>
+
+    <div class="chart-wrap">
+      <svg id="envChart" class="chart-svg" viewBox="0 0 1000 520" role="img" aria-label="Temperature and humidity line chart">
+        <!-- Plot area padding -->
+        <defs>
+          <linearGradient id="tempGlow" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="rgba(120,170,255,.0)"/>
+            <stop offset="0.5" stop-color="rgba(120,170,255,.45)"/>
+            <stop offset="1" stop-color="rgba(120,170,255,.0)"/>
+          </linearGradient>
+
+          <linearGradient id="humGlow" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="rgba(0,220,255,.0)"/>
+            <stop offset="0.5" stop-color="rgba(0,220,255,.35)"/>
+            <stop offset="1" stop-color="rgba(0,220,255,.0)"/>
+          </linearGradient>
+
+          <filter id="lineSoftGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background grid -->
+        <g class="grid">
+          <!-- vertical lines -->
+          <line x1="120" y1="60" x2="120" y2="460" />
+          <line x1="240" y1="60" x2="240" y2="460" />
+          <line x1="360" y1="60" x2="360" y2="460" />
+          <line x1="480" y1="60" x2="480" y2="460" />
+          <line x1="600" y1="60" x2="600" y2="460" />
+          <line x1="720" y1="60" x2="720" y2="460" />
+          <line x1="840" y1="60" x2="840" y2="460" />
+          <line x1="960" y1="60" x2="960" y2="460" />
+
+          <!-- horizontal lines -->
+          <line x1="120" y1="100" x2="960" y2="100" />
+          <line x1="120" y1="180" x2="960" y2="180" />
+          <line x1="120" y1="260" x2="960" y2="260" />
+          <line x1="120" y1="340" x2="960" y2="340" />
+          <line x1="120" y1="420" x2="960" y2="420" />
+        </g>
+
+        <!-- Axes -->
+        <g class="axes">
+          <line x1="120" y1="60" x2="120" y2="460"/>
+          <line x1="120" y1="460" x2="960" y2="460"/>
+        </g>
+
+        <!-- Labels -->
+        <text class="axis-label" x="120" y="500">Time →</text>
+        <text class="axis-label" x="26" y="72" transform="rotate(-90 26 72)">Value</text>
+
+        <!-- Legend -->
+        <g class="legend2">
+          <rect class="legend-chip" x="120" y="18" rx="999" ry="999" width="160" height="32"></rect>
+          <circle cx="138" cy="34" r="6" class="temp-dot"></circle>
+          <text x="152" y="39" class="legend-text">Temperature</text>
+
+          <rect class="legend-chip" x="290" y="18" rx="999" ry="999" width="150" height="32"></rect>
+          <circle cx="308" cy="34" r="6" class="hum-dot"></circle>
+          <text x="322" y="39" class="legend-text">Humidity</text>
+
+          <text id="liveReadout" x="960" y="40" text-anchor="end" class="readout">
+            -- °C • -- %
+          </text>
+        </g>
+
+        <!-- Series glows (fat transparent strokes) -->
+        <path id="tempGlowPath" class="series-glow temp-glow" d="" />
+        <path id="humGlowPath" class="series-glow hum-glow" d="" />
+
+        <!-- Series lines -->
+        <path id="tempPath" class="series-line temp-line" filter="url(#lineSoftGlow)" d="" />
+        <path id="humPath" class="series-line hum-line" filter="url(#lineSoftGlow)" d="" />
+
+        <!-- Last-point markers -->
+        <circle id="tempLast" r="6" class="last-dot temp-dot"></circle>
+        <circle id="humLast" r="6" class="last-dot hum-dot"></circle>
+      </svg>
+    </div>
+  </article>
+  <article class="card forecast-card">
+  <div class="forecast-head">
+    <h3>Forecast & Alerts</h3>
+    <span id="forecastBadge" class="badge ok">OK</span>
+  </div>
+
+  <p id="forecastText" class="forecast-text">Loading status...</p>
+
+  <!-- Required: user gesture button -->
+  <button id="enableVoice" class="btn">Enable Voice Alerts</button>
+</article>
+
+<!-- One audio element plays all voice clips -->
+<audio id="voicePlayer" preload="auto"></audio>
+</section>
+
+
+    <!-- RIGHT: Sensors (narrow) -->
+    <section class="col right narrow">
+      <article class="card big sensors-card">
+        <div class="card-head">
+          <h2>Sensors</h2>
+
+          <div class="alarm" title="Alert">
+            <span class="alarm-dot" aria-hidden="true"></span>
+            <span class="alarm-bang" aria-hidden="true">!</span>
+          </div>
+        </div>
+
+        <div class="sensors-stack">
+          <div class="sensor-row">
+            <div class="sleft">
+              <span class="sicon" aria-hidden="true">🌡️</span>
+              <div>
+                <div class="stitle">Temperature</div>
+                <div class="ssub">Living</div>
+              </div>
+            </div>
+            <div class="sval"><div id="cardTempNum" class="num">26.4</div><div class="u">°C</div></div>
+          </div>
+
+          <div class="sensor-row">
+            <div class="sleft">
+              <span class="sicon" aria-hidden="true">💧</span>
+              <div>
+                <div class="stitle">Humidity</div>
+                <div class="ssub">Bedroom</div>
+              </div>
+            </div>
+            <div class="sval"><div id="cardHumNum" class="num">48</div><div class="u">%</div></div>
+          </div>
+
+          <div class="sensor-row warnrow">
+            <div class="sleft">
+              <span class="sicon" aria-hidden="true">🧪</span>
+              <div>
+                <div class="stitle">Gas</div>
+                <div class="ssub">Corridor</div>
+              </div>
+            </div>
+            <div class="sval"><div class="num">210</div><div class="u">ppm</div></div>
+          </div>
+
+          <div class="sensor-row">
+            <div class="sleft">
+              <span class="sicon" aria-hidden="true">🛢️</span>
+              <div>
+                <div class="stitle">Tank</div>
+                <div class="ssub">Courtyard</div>
+              </div>
+            </div>
+            <div class="sval"><div class="num">72</div><div class="u">%</div></div>
+          </div>
+
+          <div class="sensor-row">
+            <div class="sleft">
+              <span class="sicon" aria-hidden="true">🌧️</span>
+              <div>
+                <div class="stitle">Rain</div>
+                <div class="ssub">Outdoor</div>
+              </div>
+            </div>
+            <div class="sval"><div class="num">0</div><div class="u">/1</div></div>
+          </div>
+
+          <div class="sensor-row">
+            <div class="sleft">
+              <span class="sicon" aria-hidden="true">💡</span>
+              <div>
+                <div class="stitle">LDR</div>
+                <div class="ssub">Living</div>
+              </div>
+            </div>
+            <div class="sval"><div class="num">640</div><div class="u">lx</div></div>
+          </div>
+        </div>
+
+        <div class="mini-status">
+          <div class="status-pill"><span class="leg-dot lg-ok"></span> MQTT Connected</div>
+          <div class="status-pill"><span class="leg-dot lg-alert"></span> Gas Watch</div>
+        </div>
+       
+        <audio id="alarmSound" src="/Alert-sound.mp3" preload="auto"></audio>
+
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© Smart Home UI</span>
+    <span class="muted">Dark glass • Digital twin style</span>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
